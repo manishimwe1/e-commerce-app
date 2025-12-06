@@ -32,6 +32,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const currentSort = searchParams.get("sort") ?? "name";
   const urlMinPrice = Number(searchParams.get("minPrice")) || 0;
   const urlMaxPrice = Number(searchParams.get("maxPrice")) || 5000;
+  const currentInStock = searchParams.get("inStock") === "true";
 
   // Local state for price range (for smooth slider dragging)
   const [priceRange, setPriceRange] = useState<[number, number]>([
@@ -50,13 +51,15 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
   const isColorActive = !!currentColor;
   const isMaterialActive = !!currentMaterial;
   const isPriceActive = urlMinPrice > 0 || urlMaxPrice < 5000;
+  const isInStockActive = currentInStock;
 
   const hasActiveFilters =
     isSearchActive ||
     isCategoryActive ||
     isColorActive ||
     isMaterialActive ||
-    isPriceActive;
+    isPriceActive ||
+    isInStockActive;
 
   // Count active filters
   const activeFilterCount = [
@@ -65,6 +68,7 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
     isColorActive,
     isMaterialActive,
     isPriceActive,
+    isInStockActive,
   ].filter(Boolean).length;
 
   const updateParams = useCallback(
@@ -297,6 +301,34 @@ export function ProductFilters({ categories }: ProductFiltersProps) {
           }
           className={`mt-4 ${isPriceActive ? "[&_[role=slider]]:border-amber-500 [&_[role=slider]]:ring-amber-500" : ""}`}
         />
+      </div>
+
+      {/* In Stock Only */}
+      <div>
+        <label className="flex cursor-pointer items-center gap-3">
+          <input
+            type="checkbox"
+            checked={currentInStock}
+            onChange={(e) =>
+              updateParams({ inStock: e.target.checked ? "true" : null })
+            }
+            className="h-5 w-5 rounded border-zinc-300 text-amber-500 focus:ring-amber-500 dark:border-zinc-600 dark:bg-zinc-800"
+          />
+          <span
+            className={`text-sm font-medium ${
+              isInStockActive
+                ? "text-zinc-900 dark:text-zinc-100"
+                : "text-zinc-700 dark:text-zinc-300"
+            }`}
+          >
+            Show only in-stock
+            {isInStockActive && (
+              <Badge className="ml-2 h-5 bg-amber-500 px-1.5 text-xs text-white hover:bg-amber-500">
+                Active
+              </Badge>
+            )}
+          </span>
+        </label>
       </div>
 
       {/* Sort */}

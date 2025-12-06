@@ -20,6 +20,7 @@ interface PageProps {
     minPrice?: string;
     maxPrice?: string;
     sort?: string;
+    inStock?: string;
   }>;
 }
 
@@ -33,6 +34,7 @@ export default async function HomePage({ searchParams }: PageProps) {
   const minPrice = Number(params.minPrice) || 0;
   const maxPrice = Number(params.maxPrice) || 0;
   const sort = params.sort ?? "name";
+  const inStock = params.inStock === "true";
 
   // Select query based on sort parameter
   const getQuery = () => {
@@ -63,6 +65,7 @@ export default async function HomePage({ searchParams }: PageProps) {
       material,
       minPrice,
       maxPrice,
+      inStock,
     },
   });
 

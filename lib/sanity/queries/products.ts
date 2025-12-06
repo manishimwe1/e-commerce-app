@@ -205,6 +205,7 @@ export const FILTER_PRODUCTS_BY_NAME_QUERY = defineQuery(`*[
   && ($minPrice == 0 || price >= $minPrice)
   && ($maxPrice == 0 || price <= $maxPrice)
   && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")
+  && ($inStock == false || stock > 0)
 ] | order(name asc) {
   _id,
   name,
@@ -239,6 +240,7 @@ export const FILTER_PRODUCTS_BY_PRICE_ASC_QUERY = defineQuery(`*[
   && ($minPrice == 0 || price >= $minPrice)
   && ($maxPrice == 0 || price <= $maxPrice)
   && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")
+  && ($inStock == false || stock > 0)
 ] | order(price asc) {
   _id,
   name,
@@ -273,6 +275,7 @@ export const FILTER_PRODUCTS_BY_PRICE_DESC_QUERY = defineQuery(`*[
   && ($minPrice == 0 || price >= $minPrice)
   && ($maxPrice == 0 || price <= $maxPrice)
   && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")
+  && ($inStock == false || stock > 0)
 ] | order(price desc) {
   _id,
   name,
@@ -308,6 +311,7 @@ export const FILTER_PRODUCTS_BY_RELEVANCE_QUERY = defineQuery(`*[
   && ($minPrice == 0 || price >= $minPrice)
   && ($maxPrice == 0 || price <= $maxPrice)
   && ($searchQuery == "" || name match $searchQuery + "*" || description match $searchQuery + "*")
+  && ($inStock == false || stock > 0)
 ] | score(
   boost(name match $searchQuery + "*", 3),
   boost(description match $searchQuery + "*", 1)
