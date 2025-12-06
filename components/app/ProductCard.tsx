@@ -6,7 +6,10 @@ import Link from "next/link";
 import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { useCartActions } from "@/lib/store/cart-store-provider";
+import {
+  useCartActions,
+  useCartItems,
+} from "@/lib/store/cart-store-provider";
 import { cn } from "@/lib/utils";
 import type { FILTER_PRODUCTS_BY_NAME_QUERYResult } from "@/sanity.types";
 
@@ -18,6 +21,7 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const { addItem, openCart } = useCartActions();
+  const cartItems = useCartItems();
   const [hoveredImageIndex, setHoveredImageIndex] = useState<number | null>(
     null
   );
@@ -29,11 +33,17 @@ export function ProductCard({ product }: ProductCardProps) {
       ? images[hoveredImageIndex]?.asset?.url
       : mainImageUrl;
 
-  const isOutOfStock = (product.stock ?? 0) <= 0;
+  const stock = product.stock ?? 0;
+  const cartItem = cartItems.find((item) => item.productId === product._id);
+  const quantityInCart = cartItem?.quantity ?? 0;
+  const availableToAdd = stock - quantityInCart;
+
+  const isOutOfStock = stock <= 0;
+  const isMaxInCart = availableToAdd <= 0 && !isOutOfStock;
   const hasMultipleImages = images.length > 1;
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
+    if (isOutOfStock || isMaxInCart) return;
 
     addItem({
       productId: product._id,
@@ -115,14 +125,23 @@ export function ProductCard({ product }: ProductCardProps) {
         </p>
       </CardContent>
 
-      <CardFooter className="p-4 pt-0">
+      <CardFooter className="flex flex-col gap-2 p-4 pt-0">
+        {quantityInCart > 0 && (
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            {quantityInCart} in basket
+          </p>
+        )}
         <Button
           onClick={handleAddToCart}
-          disabled={isOutOfStock}
+          disabled={isOutOfStock || isMaxInCart}
           className="w-full"
-          variant={isOutOfStock ? "secondary" : "default"}
+          variant={isOutOfStock || isMaxInCart ? "secondary" : "default"}
         >
-          {isOutOfStock ? "Out of Stock" : "Add to Basket"}
+          {isOutOfStock
+            ? "Out of Stock"
+            : isMaxInCart
+              ? "Max in Basket"
+              : "Add to Basket"}
         </Button>
       </CardFooter>
     </Card>
