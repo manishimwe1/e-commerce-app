@@ -1,6 +1,5 @@
 import {
   Package,
-  Clock,
   Truck,
   XCircle,
   CreditCard,
@@ -19,13 +18,6 @@ export interface OrderStatusConfig {
 }
 
 export const ORDER_STATUS_CONFIG: Record<string, OrderStatusConfig> = {
-  pending: {
-    color: "bg-yellow-100 text-yellow-800",
-    icon: Clock,
-    label: "Pending",
-    iconColor: "text-amber-600 dark:text-amber-400",
-    iconBgColor: "bg-amber-100 dark:bg-amber-900/30",
-  },
   paid: {
     color: "bg-green-100 text-green-800",
     icon: CreditCard,
@@ -57,4 +49,4 @@ export const ORDER_STATUS_CONFIG: Record<string, OrderStatusConfig> = {
 };
 
 export const getOrderStatus = (status: string | null | undefined) =>
-  ORDER_STATUS_CONFIG[status ?? "pending"] ?? ORDER_STATUS_CONFIG.pending;
+  ORDER_STATUS_CONFIG[status ?? "paid"] ?? ORDER_STATUS_CONFIG.paid;

@@ -75,10 +75,9 @@ export const orderType = defineType({
       name: "status",
       type: "string",
       group: "details",
-      initialValue: "pending",
+      initialValue: "paid",
       options: {
         list: [
-          { title: "Pending", value: "pending" },
           { title: "Paid", value: "paid" },
           { title: "Shipped", value: "shipped" },
           { title: "Delivered", value: "delivered" },
@@ -145,7 +144,7 @@ export const orderType = defineType({
     prepare({ orderNumber, email, total, status }) {
       return {
         title: `Order ${orderNumber ?? "N/A"}`,
-        subtitle: `${email ?? "No email"} • £${total ?? 0} • ${status ?? "pending"}`,
+        subtitle: `${email ?? "No email"} • £${total ?? 0} • ${status ?? "paid"}`,
       };
     },
   },

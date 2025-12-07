@@ -6,7 +6,7 @@ import type { ORDERS_BY_USER_QUERYResult } from "@/sanity.types";
 
 const getMyOrdersSchema = z.object({
   status: z
-    .enum(["", "pending", "paid", "shipped", "delivered", "cancelled"])
+    .enum(["", "paid", "shipped", "delivered", "cancelled"])
     .optional()
     .default("")
     .describe("Filter orders by status (leave empty for all orders)"),
@@ -82,7 +82,6 @@ export function createGetMyOrdersTool(userId: string | null) {
 
         const formattedOrders: OrderSummary[] = filteredOrders.map((order) => {
           const statusDisplayMap: Record<string, string> = {
-            pending: "⏳ Pending",
             paid: "✅ Paid",
             shipped: "📦 Shipped",
             delivered: "🎉 Delivered",
